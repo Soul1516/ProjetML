@@ -2,7 +2,7 @@ services:
   - type: web
     name: projetml-web
     env: python
-    pythonVersion: 3.13
+    pythonVersion: 3.12
     branch: master
     buildCommand: |
       pip install --upgrade pip
