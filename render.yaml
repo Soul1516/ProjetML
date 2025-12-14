@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: projetml-web
+    env: python
+    pythonVersion: 3.13
+    branch: master
+    buildCommand: |
+      pip install --upgrade pip
+      pip install numpy<2
+      pip install -r requirements.txt
+    startCommand: python app.py
+    # Remplace `app.py` par le fichier qui lance ton application
