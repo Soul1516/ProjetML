@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plateforme d'Analyse de Tumeurs Cérébrales</title>
+    <link rel="stylesheet" href="/static/css/main.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="login-screen" class="screen active">
+        <div class="login-container">
+            <div class="login-card">
+                <div class="login-header">
+                    <h1>🏥</h1>
+                    <h2>Plateforme d'Analyse de Tumeurs Cérébrales</h2>
+                    <p>Assistant de Diagnostic Assisté par IA</p>
+                </div>
+                <form id="login-form">
+                    <div class="form-group">
+                        <label for="username">Nom d'utilisateur</label>
+                        <input type="text" id="username" name="username" required placeholder="Entrez votre nom d'utilisateur">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Mot de passe</label>
+                        <input type="password" id="password" name="password" required placeholder="Entrez votre mot de passe">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Se connecter</button>
+                    <div id="login-error" class="error-message"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Application -->
+    <div id="app-screen" class="screen">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <h1>🏥 Plateforme d'Analyse de Tumeurs Cérébrales</h1>
+                <div class="header-right">
+                    <span id="user-name" class="user-name"></span>
+                    <span id="user-role" class="user-role"></span>
+                    <button id="logout-btn" class="btn btn-secondary">Déconnexion</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- AI Advisory Banner -->
+        <div class="advisory-banner">
+            <div class="advisory-content">
+                <span class="advisory-icon">⚠️</span>
+                <div class="advisory-text">
+                    <strong>Avertissement IA:</strong> Ceci est une plateforme d'assistance au diagnostic assistée par IA. 
+                    Tous les diagnostics cliniques finaux doivent être fournis par un oncologue certifié. 
+                    Cet outil est conçu pour aider au diagnostic, pas pour remplacer le jugement médical professionnel.
+                </div>
+            </div>
+        </div>
+
+        <!-- Doctor Panel -->
+        <div id="doctor-panel" class="panel hidden">
+            <div class="container">
+                <h2 class="panel-title">Tableau de Bord Médecin</h2>
+                
+                <!-- Patient Information Form -->
+                <div class="card">
+                    <h3>👤 Informations Patient</h3>
+                    <form id="patient-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="patient-age">Âge</label>
+                                <input type="number" id="patient-age" name="age" min="0" max="120" placeholder="Âge du patient">
+                            </div>
+                            <div class="form-group">
+                                <label for="patient-gender">Genre</label>
+                                <select id="patient-gender" name="gender">
+                                    <option value="">Non spécifié</option>
+                                    <option value="Male">Homme</option>
+                                    <option value="Female">Femme</option>
+                                    <option value="Other">Autre</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Symptômes</label>
+                            <div class="checkbox-group">
+                                <label><input type="checkbox" name="symptoms" value="Headaches"> Maux de tête</label>
+                                <label><input type="checkbox" name="symptoms" value="Seizures"> Crises</label>
+                                <label><input type="checkbox" name="symptoms" value="Visual Problems"> Problèmes visuels</label>
+                                <label><input type="checkbox" name="symptoms" value="Memory Issues"> Problèmes de mémoire</label>
+                                <label><input type="checkbox" name="symptoms" value="Nausea/Vomiting"> Nausées/Vomissements</label>
+                                <label><input type="checkbox" name="symptoms" value="Balance Problems"> Problèmes d'équilibre</label>
+                                <label><input type="checkbox" name="symptoms" value="Speech Difficulties"> Difficultés d'élocution</label>
+                                <label><input type="checkbox" name="symptoms" value="Weakness"> Faiblesse</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="medical-history">Antécédents médicaux</label>
+                            <textarea id="medical-history" name="medical_history" rows="3" placeholder="Antécédents médicaux du patient"></textarea>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Image Upload -->
+                <div class="card">
+                    <h3>📤 Télécharger Scan IRM</h3>
+                    <div class="upload-area" id="upload-area">
+                        <input type="file" id="image-input" accept="image/*" multiple>
+                        <div class="upload-content">
+                            <span class="upload-icon">📷</span>
+                            <p>Cliquez pour télécharger ou glissez-déposez</p>
+                            <p class="upload-hint">Formats supportés: JPG, PNG, TIFF, BMP</p>
+                        </div>
+                    </div>
+                    <div id="uploaded-images" class="uploaded-images"></div>
+                    <button id="analyze-btn" class="btn btn-primary" disabled>🔍 Analyser les Images</button>
+                </div>
+
+                <!-- Results Section -->
+                <div id="results-section" class="results-section hidden">
+                    <div class="card">
+                        <h3>📊 Résultats de l'Analyse</h3>
+                        <div id="results-content"></div>
+                    </div>
+                </div>
+
+                <!-- Mistral Chatbot Placeholder -->
+                <div class="card chatbot-placeholder">
+                    <h3>🤖 Assistant Chatbot IA</h3>
+                    <div class="chatbot-info">
+                        <p>Intégration du chatbot basé sur Mistral à venir.</p>
+                        <p class="chatbot-note">Cet espace est réservé pour le support décisionnel clinique avancé assisté par IA.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Patient Panel -->
+        <div id="patient-panel" class="panel hidden">
+            <div class="container">
+                <h2 class="panel-title">Portail d'Éducation Patient</h2>
+                
+                <!-- Welcome Section -->
+                <div class="welcome-section">
+                    <div class="welcome-card animated-card">
+                        <div class="welcome-icon">🧠</div>
+                        <h2>Bienvenue dans Votre Espace de Soins Cérébraux</h2>
+                        <p>Informations claires, conseils rassurants et outils éducatifs pour mieux comprendre votre parcours neurologique.</p>
+                        <div class="welcome-badges">
+                            <span class="badge">Respect & Confidentialité</span>
+                            <span class="badge">Conseils Guidés</span>
+                            <span class="badge">Support</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Navigation Tabs -->
+                <div class="tabs">
+                    <button class="tab-btn active" data-tab="info">ℹ️ Information</button>
+                    <button class="tab-btn" data-tab="education">📚 Éducation</button>
+                    <button class="tab-btn" data-tab="quiz">🧠 Quiz</button>
+                    <button class="tab-btn" data-tab="motivation">💪 Motivation</button>
+                </div>
+
+                <!-- Info Tab -->
+                <div id="tab-info" class="tab-content active">
+                    <div class="info-cards-container">
+                        <div class="info-card animated-card">
+                            <div class="card-badge">Imagerie</div>
+                            <h4>Comprendre l'IRM</h4>
+                            <p>L'IRM observe le cerveau sans rayons X. Le rapport est expliqué par votre médecin.</p>
+                        </div>
+                        <div class="info-card animated-card">
+                            <div class="card-badge">Parcours</div>
+                            <h4>Préparer le Rendez-vous</h4>
+                            <p>Notez vos questions et symptômes. Venez accompagné si possible.</p>
+                        </div>
+                        <div class="info-card animated-card">
+                            <div class="card-badge">Symptômes</div>
+                            <h4>Signes d'Alerte</h4>
+                            <p>Les maux de tête persistants, problèmes visuels ou crises doivent être signalés rapidement.</p>
+                        </div>
+                        <div class="info-card animated-card">
+                            <div class="card-badge">Suivi</div>
+                            <h4>Et Après?</h4>
+                            <p>Votre médecin propose des examens complémentaires ou un suivi. Chaque cas est unique.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Education Tab -->
+                <div id="tab-education" class="tab-content">
+                    <div class="education-selector">
+                        <select id="education-topic" class="topic-select">
+                            <option value="general">Informations Générales</option>
+                            <option value="glioma">Gliomes</option>
+                            <option value="meningioma">Méningiomes</option>
+                            <option value="pituitary">Tumeurs Hypophysaires</option>
+                            <option value="prevention">Prévention & Bien-être</option>
+                        </select>
+                    </div>
+                    <div id="education-content" class="education-content"></div>
+                </div>
+
+                <!-- Quiz Tab -->
+                <div id="tab-quiz" class="tab-content">
+                    <div id="quiz-container" class="quiz-container">
+                        <div class="quiz-welcome">
+                            <h3>Testez Vos Connaissances</h3>
+                            <p>Apprenez sur les tumeurs cérébrales grâce à des questions interactives</p>
+                            <button id="start-quiz-btn" class="btn btn-primary">Commencer le Quiz</button>
+                        </div>
+                        <div id="quiz-content" class="quiz-content hidden"></div>
+                    </div>
+                </div>
+
+                <!-- Motivation Tab -->
+                <div id="tab-motivation" class="tab-content">
+                    <div class="motivation-section">
+                        <div class="motivation-card animated-card">
+                            <h3>🌟 Message du Jour</h3>
+                            <p id="motivation-message" class="motivation-text"></p>
+                        </div>
+                        <div class="tip-card animated-card">
+                            <h3>💡 Conseil du Jour</h3>
+                            <p id="daily-tip" class="tip-text"></p>
+                        </div>
+                        <div class="calendar-section">
+                            <h3>📅 Calendrier de Sensibilisation</h3>
+                            <div class="month-selector">
+                                <button class="month-btn" data-month="february">Février</button>
+                                <button class="month-btn" data-month="march">Mars</button>
+                                <button class="month-btn" data-month="april">Avril</button>
+                                <button class="month-btn" data-month="may">Mai</button>
+                                <button class="month-btn" data-month="june">Juin</button>
+                                <button class="month-btn" data-month="october">Octobre</button>
+                            </div>
+                            <div id="calendar-content" class="calendar-content"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/main.js"></script>
+</body>
+</html>
